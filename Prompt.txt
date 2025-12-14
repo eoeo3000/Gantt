@@ -1,0 +1,50 @@
+Quiero que me generes un componente en JavaScript llamado Gantt que muestre un diagrama de Gantt en una página web, dividido en módulos. 
+
+Debe cumplir con estas características:
+
+1. Tabla izquierda:
+   - Columnas: Nombre, Fecha de inicio, Fecha de término, Duración y Dependencia.
+   - Las columnas deben autoajustarse al contenido inicial (mínimo 80px).
+   - El texto dentro de cada celda debe mostrarse en una sola línea, con "..." si excede el ancho.
+   - Las columnas deben ser redimensionables manualmente arrastrando el borde de los encabezados.
+   - Las celdas deben ser editables directamente (excepto la columna Duración, que se calcula automáticamente).
+   - La tabla debe permanecer fija (sin scroll horizontal).
+
+2. Gráfica derecha:
+   - Representación visual de las barras de tareas.
+   - Las barras deben estar alineadas con las filas de la tabla izquierda.
+   - Debe incluir una escala de tiempo en la parte superior.
+   - La gráfica debe tener scroll horizontal independiente.
+   - Las dependencias pueden mostrarse como etiquetas junto a las barras.
+
+3. División clara:
+   - Debe existir un divisor vertical independiente que separe la tabla de la gráfica.
+
+4. Granularidad:
+   - Incluir un método público `setGranularity` que permita cambiar la escala de tiempo entre días, horas y semanas.
+   - Al cambiar la granularidad, se recalculan las posiciones y tamaños de las barras.
+
+5. Funciones adicionales:
+   - Método público `addTask(task)` para agregar nuevas tareas directamente en la tabla y gráfica.
+   - Método público `editTask(index, field, value)` para modificar tareas directamente desde la tabla izquierda.
+
+6. Infraestructura modular:
+   - `src/components/gantt.js`: Clase principal `Gantt` que coordina todo.
+   - `src/components/ganttTable.js`: Función para construir la tabla izquierda con autoajuste, edición y redimensionamiento.
+   - `src/components/ganttChart.js`: Función para construir la gráfica derecha.
+   - `src/components/ganttDivider.js`: Función para crear el divisor vertical.
+   - `src/components/ganttUtils.js`: Métodos auxiliares (`unitsBetween`, `addUnits`, `unitLabel`, `getWeekNumber`, `durationLabel`, `UNIT_WIDTHS`).
+
+7. Ejemplo de uso:
+   - Incluir un archivo `index.html` con:
+     - Botones para cambiar granularidad (días, horas, semanas).
+     - Botón para agregar una nueva tarea.
+     - Un conjunto de tareas de prueba con dependencias.
+     - Importación del componente `Gantt` desde `src/components/gantt.js`.
+
+Entrega el código completo de cada módulo (`gantt.js`, `ganttTable.js`, `ganttChart.js`, `ganttDivider.js`, `ganttUtils.js`) y el ejemplo de `index.html`.
+
+Mejoras; 
+-Revisar el ajuste de las columnas.
+-Dividir la linea de tiempo, por ejemplo si se deja la granularidad en horas, dejar 2 niveles, 
+dias y abajo horas. 

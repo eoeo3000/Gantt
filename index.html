@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Ejemplo Gantt</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+            margin: 0;
+            padding: 16px;
+            background: #f6f7f9;
+            color: #111827;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 20px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar button {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .toolbar button:hover {
+            background: #f3f4f6;
+        }
+
+        .gantt-container {
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .gantt-table-body .gantt-tr:hover {
+            background: #fafafa;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ejemplo de componente Gantt</h1>
+
+    <div class="toolbar">
+        <button id="gran-days">Granularidad: días</button>
+        <button id="gran-hours">Granularidad: horas (2 niveles)</button>
+        <button id="gran-weeks">Granularidad: semanas</button>
+        <button id="add-task">Agregar tarea</button>
+        <button id="export-img">Exportar a Imagen</button>
+        <button id="export-pdf">Exportar a PDF</button>
+    </div>
+
+    <div id="gantt-root"></div>
+
+    <!-- Librerías para exportación -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="module">
+        import { Gantt } from './src/components/gantt.js';
+        import { GRANULARITIES, addUnits } from './src/components/ganttUtils.js';
+
+        const root = document.getElementById('gantt-root');
+
+        // Tareas de prueba
+        const now = new Date();
+        const tasks = [
+            { name: 'Planificación inicial', start: addUnits(now, 0, GRANULARITIES.DAYS), end: addUnits(now, 3, GRANULARITIES.DAYS), dependency: '' },
+            { name: 'Diseño de arquitectura', start: addUnits(now, 2, GRANULARITIES.DAYS), end: addUnits(now, 7, GRANULARITIES.DAYS), dependency: 'Planificación inicial' },
+            { name: 'Implementación módulo A', start: addUnits(now, 1, GRANULARITIES.WEEKS), end: addUnits(now, 2, GRANULARITIES.WEEKS), dependency: 'Diseño de arquitectura' },
+            { name: 'Pruebas integrales', start: addUnits(now, 12, GRANULARITIES.DAYS), end: addUnits(now, 18, GRANULARITIES.DAYS), dependency: 'Implementación módulo A' },
+            { name: 'Documentación', start: addUnits(now, 17, GRANULARITIES.DAYS), end: addUnits(now, 20, GRANULARITIES.DAYS), dependency: 'Pruebas integrales' },
+        ];
+
+        const gantt = new Gantt(root, tasks, { granularity: GRANULARITIES.DAYS, height: '600px' });
+
+        // Botones de granularidad
+        document.getElementById('gran-days').addEventListener('click', () => {
+            gantt.setGranularity(GRANULARITIES.DAYS);
+        });
+        document.getElementById('gran-hours').addEventListener('click', () => {
+            gantt.setGranularity(GRANULARITIES.HOURS);
+        });
+        document.getElementById('gran-weeks').addEventListener('click', () => {
+            gantt.setGranularity(GRANULARITIES.WEEKS);
+        });
+
+        // Botón para agregar nueva tarea
+        document.getElementById('add-task').addEventListener('click', () => {
+            const start = addUnits(new Date(), 1, GRANULARITIES.DAYS);
+            const end = addUnits(start, 3, GRANULARITIES.DAYS);
+            gantt.addTask({
+                name: 'Nueva tarea',
+                start,
+                end,
+                dependency: 'Planificación inicial',
+            });
+        });
+
+        // Exportar
+        document.getElementById('export-img').addEventListener('click', () => gantt.exportAsImage());
+        document.getElementById('export-pdf').addEventListener('click', () => gantt.exportAsPDF());
+    </script>
+</body>
+
+</html>
